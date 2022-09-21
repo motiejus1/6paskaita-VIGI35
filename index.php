@@ -23,6 +23,7 @@
             unset($_SESSION["zinutes_stilius"]);
             ?>
         <?php } ?>
+        <!-- if jeigu sausainis egzistuoja - forma paslepta, jei ne - forma matoma -->
         <form method="post" action="index.php">
             <input class="form-control" name="vardas" type="text" placeholder="Vardas">
             <input class="form-control" type="password" name="slaptazodis" placeholder="Slaptazodis">
@@ -53,6 +54,10 @@
         } else {
             //zinute turi buti raudona
             //ir kitoks tekstas
+            //Sesijos skaitiklis
+            // Sesijos skaitiklis $_SESSION["skaitiklis"]++
+            //$_SESSION["skaitiklis"] == 3
+            //susikurti sausainiukas kuris galiotu 60sec
             $_SESSION["zinute"] = "Neteisingi prisijungimo duomenys";
             $_SESSION["zinutes_stilius"] = "alert-danger";
             header("Location: index.php");
