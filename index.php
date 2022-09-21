@@ -1,46 +1,66 @@
 <?php session_start(); ?>
-<?php //session_destroy(); ?>
-<?php
-//$_SESSION superglobalus kintamasis
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagrindinis</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+</head>
+<body>
 
-//$_SESSION - yra laikina atminties vieta serveryje, kurioje kaip ir sausainio atveju galime pasideti informacija iki
-// 1. serveryje nustatyto laiko
-// 2. kol sesija sunaikinama(cookie istrynimas)
-// 3. *iki narsykles isjungimo(automatini sesijos atkurima)
-
-//Sesijos duomenys yra serveryje!!!Kazkur atsidare Inspekta mes duomenu nepamatysim. Joje galime laikyti konfidencialius duomenis
-//vartotojo vardas, vartojo teise ir t.t.
-
-//Kad sukurtume sesija reikia sukurti sesijos sausainiuka
-//session_start() - sukuriame sesija
-
-
-//sesija automatiskai start()
-$_SESSION["vardas"] = "Destytojas";
-$_SESSION["skaicius"] = 1;
-$_SESSION["skaiciuspokablelio"] = 2.2;
-
-$_SESSION["masyvas"] = [0,1,2,3,4,5,7,8,9,10];
+    <div class="container">
 
 
-class MazasObjektas {
-    public $x = 10;
-    public $y = 20;
+        <?php if(isset($_SESSION["zinute"])) { ?>
+            <div class="alert <?php echo $_SESSION["zinutes_stilius"]; ?>">
+                <p><?php echo $_SESSION["zinute"]; ?></p>
+            </div>
+            <?php 
+            unset($_SESSION["zinute"]); 
+            unset($_SESSION["zinutes_stilius"]);
+            ?>
+        <?php } ?>
+        <form method="post" action="index.php">
+            <input class="form-control" name="vardas" type="text" placeholder="Vardas">
+            <input class="form-control" type="password" name="slaptazodis" placeholder="Slaptazodis">
+            <button class="btn btn-primary" type="submit" name="prisijungti">Prisijungti</button>
+        </form>    
 
-    public function suma() {
-        return $this->x + $this->y;
+    </div>
+   
+
+    <?php 
+    //tikriname ar mygtukas paspaustas
+    if(isset($_POST["prisijungti"])) {
+        $vardas = $_POST["vardas"];
+        $slaptazodis = $_POST["slaptazodis"];
+
+        // geras vardas ir geras slaptazods
+        $gVardas = "admin";
+        $gSlaptazodis = "123";
+        // 1 - admin
+        // 2 - vartotojas
+        // 3 - moderatorius
+        // 4 - klientas
+
+        if($vardas == $gVardas && $slaptazodis == $gSlaptazodis) {
+            $_SESSION["arPrisijunges"] = 1;
+            $_SESSION["vardas"] = $vardas;
+            header("Location: manopaskyra.php");
+        } else {
+            //zinute turi buti raudona
+            //ir kitoks tekstas
+            $_SESSION["zinute"] = "Neteisingi prisijungimo duomenys";
+            $_SESSION["zinutes_stilius"] = "alert-danger";
+            header("Location: index.php");
+        }
+
     }
-}
+    
+    ?>
 
-
-$objektas = new MazasObjektas();
-$_SESSION["objektas"] = $objektas;
-
-// echo $_SESSION["vardas"];
-
-$vardas = "Destytojas"; //taip nepavyks, nes cia lokalus kintamasis
-echo $vardas; //taip nepavyks, nes cia lokalus kintamasis
-
-// session_unset(); //istrina visus sesijos kintamuosius
-// session_destroy(); ////istrina visus sesijos kintamuosius ir sunaikina sesija
-?>
+</body>
+</html>
